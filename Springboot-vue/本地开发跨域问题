@@ -1,1 +1,26 @@
 
+####前端工程
+在vue-cli的脚手架中，我们引入了axios来发起我们的客户端请求。
+因此我们需要在axios.js中来配置我们的请求参数。
+(```)
+const $http = axios.create({
+  baseURL: baseURL, // 因为我本地做了反向代理
+  timeout: 10000,
+  withCredentials: true, // 是否允许带cookie这些
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+  }
+})
+(```)
+---
+####后端工程
+最主要的配置是在后端代码中。
+根据浏览器console中提示的报错信息，我们很快就能知道在本地以不同端口的开发环境下同时启动前后端两个工程，为什么会请求错误或者是接收错误。
+答案就是我们要在filter过滤器中对Response头进行配置，我们没有指定合法的接收域名，同时也需配置Access-Control-Allow-Headers。
+(```)
+ res.setHeader("Access-Control-Allow-Origin",req.getHeader("Origin"));
+        res.setHeader("Access-Control-Allow-Credentials", "true");
+        res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+        res.setHeader("Access-Control-Max-Age", "3600");
+        res.setHeader("Access-Control-Allow-Headers", "*");
+(```)
